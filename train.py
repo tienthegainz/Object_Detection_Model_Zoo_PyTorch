@@ -101,6 +101,19 @@ def retina_main():
         optimizer, patience=3, verbose=True)
     loss_hist = collections.deque(maxlen=500)
 
+
+os.path.join(
+    args.save_folder,
+    args.dataset,
+    "retina_bb_resnet{}".format(args.depth),
+                "checkpoint_{}.pth".format(epoch)
+    )
+   try:
+        os.mkdir(args.save_folder)
+        os.mkdir(os.path.join(args.save_folder, args.dataset))
+    except Exception as err:
+        print(err)
+
     for epoch in range(start_epoch, args.epochs):
         retinanet.train()
         retinanet.freeze_bn()
