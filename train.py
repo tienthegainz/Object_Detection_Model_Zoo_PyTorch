@@ -101,7 +101,7 @@ def retina_main():
 
     for i in range(start_epoch, args.epochs):
         retinanet.train()
-        retinanet.module.freeze_bn()
+        retinanet.freeze_bn()
         classification_loss = None
         regression_loss = None
 
