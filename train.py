@@ -101,10 +101,17 @@ def retina_main():
         optimizer, patience=3, verbose=True)
     loss_hist = collections.deque(maxlen=500)
 
-   try:
+    try:
         os.mkdir(args.save_folder)
+    except Exception as err:
+        print(err)
+    try:
         os.mkdir(os.path.join(args.save_folder, args.dataset))
-        os.mkdir(os.path.join(args.save_folder, args.dataset, "retina_bb_resnet{}".format(args.depth)))
+    except Exception as err:
+        print(err)
+    try:
+        os.mkdir(os.path.join(args.save_folder, args.dataset,
+                              "retina_bb_resnet{}".format(args.depth)))
     except Exception as err:
         print(err)
 
