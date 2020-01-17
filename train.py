@@ -1,5 +1,7 @@
 import argparse
 import collections
+import numpy as np
+import os
 
 import torch
 import torch.optim as optim
@@ -135,7 +137,7 @@ def retina_main():
 
         print(
             'Epoch: {} | Classification loss: {:1.5f} | Regression loss: {:1.5f} | Running loss: {:1.5f}'.format(
-                epoch_num, float(classification_loss), float(regression_loss), np.mean(loss_hist)))
+                i, float(classification_loss), float(regression_loss), np.mean(loss_hist)))
         del classification_loss
         del regression_loss
         if i % 3 and i != 0:
