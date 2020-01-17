@@ -147,7 +147,7 @@ def retina_main():
         scheduler.step(np.mean(epoch_loss))
         state = {
             'epoch': epoch,
-            'state_dict': get_state_dict(model)
+            'state_dict': retinanet.state_dict()
         }
 
         torch.save(
