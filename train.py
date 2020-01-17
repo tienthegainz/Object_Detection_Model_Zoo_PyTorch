@@ -93,7 +93,7 @@ def retina_main():
     if args.resume is not None:
         checkpoint = torch.load(args.resume)
         start_epoch = checkpoint['epoch'] + 1
-        model.load_state_dict(checkpoint['state_dict'])
+        retinanet.load_state_dict(checkpoint['state_dict'])
 
     retinanet.to(device)
     optimizer = optim.Adam(retinanet.parameters(), lr=1e-5)
