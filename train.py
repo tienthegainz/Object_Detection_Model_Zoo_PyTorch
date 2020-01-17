@@ -14,7 +14,7 @@ from eval import evaluate
 parser = argparse.ArgumentParser(
     description='Simple training script ')
 
-parser.add_argument('--model', default='retinanet', choices=['retinanet', 'centernet'],
+parser.add_argument('--model', default='retinanet', choices=['retinanet', 'centernet', 'faster-r-cnn'],
                     type=str, help='VOC or COCO')
 
 parser.add_argument('--dataset', default='VOC', choices=['VOC', 'COCO'],
@@ -157,3 +157,12 @@ def retina_main():
                 "checkpoint_{}.pth".format(epoch)
             )
         )
+
+    print('Training finished...\n')
+
+
+if __name__ == "__main__":
+    if args.model == 'retinanet':
+        retina_main()
+    else:
+        print('Not supported yet')
