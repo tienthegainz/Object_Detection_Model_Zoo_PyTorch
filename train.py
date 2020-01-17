@@ -101,7 +101,7 @@ def retina_main():
         optimizer, patience=3, verbose=True)
     loss_hist = collections.deque(maxlen=500)
 
-    for i in range(start_epoch, args.epochs):
+    for epoch in range(start_epoch, args.epochs):
         retinanet.train()
         retinanet.freeze_bn()
         classification_loss = None
@@ -137,7 +137,7 @@ def retina_main():
 
         print(
             'Epoch: {} | Classification loss: {:1.5f} | Regression loss: {:1.5f} | Running loss: {:1.5f}'.format(
-                i, float(classification_loss), float(regression_loss), np.mean(loss_hist)))
+                epoch, float(classification_loss), float(regression_loss), np.mean(loss_hist)))
         del classification_loss
         del regression_loss
         if i % 3 and i != 0:
