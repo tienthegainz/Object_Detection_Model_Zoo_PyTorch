@@ -154,7 +154,7 @@ def retina_main():
                 epoch, float(classification_loss), float(regression_loss), np.mean(loss_hist)))
         del classification_loss
         del regression_loss
-        if i % 3 == 0:
+        if epoch % 3 == 0:
             retinanet.training = False
             if args.dataset == 'VOC':
                 evaluate(valid_dataset, retinanet)
