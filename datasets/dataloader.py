@@ -123,6 +123,9 @@ class VOCDataset(Dataset):
     def num_classes(self):
         return len(DATASET_CLASSES)
 
+    def label_to_name(self, label):
+        return DATASET_CLASSES[label]
+
 
 def collater(data):
 
