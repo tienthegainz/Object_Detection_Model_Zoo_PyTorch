@@ -1,0 +1,26 @@
+<annotation>
+    <folder></folder>
+    <filename>Xe tbp di_1.png</filename>
+    <path></path>
+    <source>
+        <database>Unknown</database>
+    </source>
+    <size>
+        <width>186</width>
+        <height>115</height>
+        <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+    <object>
+        <name>xe_tapdi</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>3.185546875</xmin>
+            <ymin>2.357421875</ymin>
+            <xmax>179.72305297851562</xmax>
+            <ymax>111.51119232177734</ymax>
+        </bndbox>
+    </object>
+</annotation>
