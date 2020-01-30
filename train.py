@@ -37,6 +37,9 @@ parser.add_argument('--batch_size', default=32, type=int,
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 
+parser.add_argument('-s', '--isize', default=256, type=int,
+                    help='Image size')
+
 parser.add_argument('--save_folder', default='./saved/weights/', type=str,
                     help='Directory for saving checkpoint models')
 
@@ -49,9 +52,9 @@ def retina_main():
     # Create the data loaders
     if args.dataset == 'VOC':
         train_dataset = VOCDataset(args.dataset_root,
-                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer()]))
+                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer(common_size=args.isize)]))
         valid_dataset = VOCDataset(args.dataset_root,
-                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer()]))
+                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer(common_size=args.isize)]))
     elif args.dataset == 'COCO':
         print('COCO not supported yet\n')
         exit(-1)
