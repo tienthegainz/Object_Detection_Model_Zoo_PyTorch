@@ -100,6 +100,7 @@ def retina_main():
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, patience=3, verbose=True)
     loss_hist = collections.deque(maxlen=500)
+    init_loss = 1000
 
     try:
         os.mkdir(args.save_folder)
@@ -163,16 +164,17 @@ def retina_main():
             'epoch': epoch,
             'state_dict': retinanet.state_dict()
         }
-
-        torch.save(
-            state,
-            os.path.join(
-                args.save_folder,
-                args.dataset,
-                "retina_bb_resnet{}".format(args.depth),
-                "checkpoint_{}.pth".format(epoch)
+        if np.mean(epoch_loss) < init_loss:
+            init_loss = np.mean(epoch_loss)
+            torch.save(
+                state,
+                os.path.join(
+                    args.save_folder,
+                    args.dataset,
+                    "retina_bb_resnet{}".format(args.depth),
+                    "checkpoint_{}.pth".format(epoch)
+                )
             )
-        )
 
     print('Training finished...\n')
 
