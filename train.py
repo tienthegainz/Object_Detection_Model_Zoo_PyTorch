@@ -52,9 +52,9 @@ def retina_main():
     # Create the data loaders
     if args.dataset == 'VOC':
         train_dataset = VOCDataset(args.dataset_root,
-                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer(common_size=args.isize)]))
+                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer()]))
         valid_dataset = VOCDataset(args.dataset_root,
-                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer(common_size=args.isize)]))
+                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer()]))
     elif args.dataset == 'COCO':
         print('COCO not supported yet\n')
         exit(-1)
