@@ -130,3 +130,5 @@ dmypy.json
 
 # Ignore file and folder
 test_data/
+weights/
+*.pth

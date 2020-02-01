@@ -165,7 +165,8 @@ def retina_main():
         scheduler.step(np.mean(epoch_loss))
         state = {
             'epoch': epoch,
-            'state_dict': retinanet.state_dict()
+            'state_dict': retinanet.state_dict(),
+            'num_classes': train_dataset.num_classes(),
         }
         if np.mean(epoch_loss) < init_loss:
             init_loss = np.mean(epoch_loss)
