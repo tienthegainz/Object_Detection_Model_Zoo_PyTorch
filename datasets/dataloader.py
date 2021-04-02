@@ -204,8 +204,8 @@ class Augmenter(object):
     """Convert ndarrays in sample to Tensors."""
 
     def __call__(self, sample, flip_x=0.5):
-        print(
-            'Image: {} -- Sample: {}'.format(sample['img'].shape, sample['annot'].shape))
+        # print(
+        #     'Image: {} -- Sample: {}'.format(sample['img'].shape, sample['annot'].shape))
         if np.random.rand() < flip_x:
             image, annots = sample['img'], sample['annot']
             image = image[:, ::-1, :]
