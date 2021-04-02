@@ -16,7 +16,7 @@ parser.add_argument('--model', default='retinanet', choices=['retinanet', 'cente
 
 parser.add_argument('--weight', type=str, help='Weight path')
 
-parser.add_argument('--num_classes', default=24,
+parser.add_argument('--num_classes', default=3,
                     type=int, help='Number of classes (if not in checkpoint)')
 
 parser.add_argument('--image', type=str, help='Image path')

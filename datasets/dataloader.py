@@ -9,11 +9,12 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 from torch.utils.data.sampler import Sampler
 
-import skimage.io
-import skimage.transform
-import skimage.color
-import skimage
+# import skimage.io
+# import skimage.transform
+# import skimage.color
+# import skimage
 import cv2
+import traceback
 # VOC
 from PIL import Image
 if sys.version_info[0] == 2:
@@ -21,11 +22,7 @@ if sys.version_info[0] == 2:
 else:
     import xml.etree.ElementTree as ET
 
-DATASET_CLASSES = (
-    "balo", "balo_diutre", "bantreem", "binh_sua", "cautruot", "coc_sua", "ghe_an",
-    "ghe_bap_benh", "ghe_ngoi_oto", "ghedualung_treem", "ke", "noi", "person", "phao",
-    "quay_cui", "tham", "thanh_chan_cau_thang", "thanh_chan_giuong", "xe_babanh", "xe_choichan",
-    "xe_day", "xe_tapdi", "xichdu", "yem", )
+DATASET_CLASSES = ("keystone", "oval", "round", "taper")
 
 CLASSES_TO_IDS = dict(zip(DATASET_CLASSES, range(len(DATASET_CLASSES))))
 
@@ -38,7 +35,11 @@ def get_list_ids(path):
     ids = list()
     for item in os.listdir(path):
         parts = item.split('.')[:-1]
-        ids.append('.'.join(parts))
+        if not parts:
+            print("Skip ", item)
+        else:
+            name = '.'.join(parts)
+            ids.append(name)
     return ids
 
 
@@ -56,9 +57,13 @@ class VOCDataset(Dataset):
             self.image_ids = get_list_ids(
                 os.path.join(self.root, 'train_image'))
         elif mode == 'val':
-            self._annopath = os.path.join(self.root, 'val_xml', '%s.xml')
-            self._imgpath = os.path.join(self.root, 'val_image', '%s')
-            self.image_ids = get_list_ids(os.path.join(self.root, 'val_image'))
+            # self._annopath = os.path.join(self.root, 'val_xml', '%s.xml')
+            # self._imgpath = os.path.join(self.root, 'val_image', '%s')
+            # self.image_ids = get_list_ids(os.path.join(self.root, 'val_image'))
+            self._annopath = os.path.join(self.root, 'train_xml', '%s.xml')
+            self._imgpath = os.path.join(self.root, 'train_image', '%s')
+            self.image_ids = get_list_ids(
+                os.path.join(self.root, 'train_image'))
         else:
             print('%s not supported. Exitting\n' % mode)
             exit(-1)
@@ -77,14 +82,18 @@ class VOCDataset(Dataset):
         return len(self.image_ids)
 
     def load_image(self, idx):
-        img_id = self.image_ids[idx]
-        xml_name = self._annopath % img_id
-        anno_file = ET.parse(xml_name).getroot()
+        try:
+            img_id = self.image_ids[idx]
+            xml_name = self._annopath % img_id
+            anno_file = ET.parse(xml_name).getroot()
 
-        file_postfix = anno_file.find('./filename').text.split('.')[-1]
-        image_name = img_id+'.' + file_postfix
-        image = Image.open(self._imgpath % image_name).convert('RGB')
-        return np.array(image)/255.00
+            file_postfix = anno_file.find('./filename').text.split('.')[-1]
+            image_name = img_id+'.' + file_postfix
+            image = Image.open(self._imgpath % image_name).convert('RGB')
+            return np.array(image)/255.00
+        except Exception as e:
+            print("Err image: {} - idx: {}".format(self.image_ids[idx], idx))
+            traceback.print_exc()
 
     def load_annotations(self, idx):
         img_id = self.image_ids[idx]
@@ -184,7 +193,9 @@ class Resizer(object):
 
         new_image = np.zeros((common_size, common_size, 3))
         new_image[0:resized_height, 0:resized_width] = image
-        annots[:, :4] *= scale
+
+        if annots.shape[0] != 0:
+            annots[:, :4] *= scale
 
         return {'img': torch.from_numpy(new_image), 'annot': torch.from_numpy(annots), 'scale': scale}
 
@@ -193,20 +204,21 @@ class Augmenter(object):
     """Convert ndarrays in sample to Tensors."""
 
     def __call__(self, sample, flip_x=0.5):
-
+        print(
+            'Image: {} -- Sample: {}'.format(sample['img'].shape, sample['annot'].shape))
         if np.random.rand() < flip_x:
             image, annots = sample['img'], sample['annot']
             image = image[:, ::-1, :]
 
             rows, cols, channels = image.shape
+            if annots.shape[0] != 0:
+                x1 = annots[:, 0].copy()
+                x2 = annots[:, 2].copy()
 
-            x1 = annots[:, 0].copy()
-            x2 = annots[:, 2].copy()
+                x_tmp = x1.copy()
 
-            x_tmp = x1.copy()
-
-            annots[:, 0] = cols - x2
-            annots[:, 2] = cols - x_tmp
+                annots[:, 0] = cols - x2
+                annots[:, 2] = cols - x_tmp
 
             sample = {'img': image, 'annot': annots}
 

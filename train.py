@@ -50,14 +50,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def retina_main():
     # Create the data loaders
-    if args.dataset == 'VOC':
-        train_dataset = VOCDataset(args.dataset_root,
-                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer()]))
-        valid_dataset = VOCDataset(args.dataset_root,
-                                   transform=transforms.Compose([Normalizer(), Augmenter(), Resizer()]))
-    elif args.dataset == 'COCO':
-        print('COCO not supported yet\n')
-        exit(-1)
+    train_dataset = VOCDataset(args.dataset_root,
+                               transform=transforms.Compose([Normalizer(), Augmenter(), Resizer()]))
+    valid_dataset = VOCDataset(args.dataset_root,
+                               transform=transforms.Compose([Normalizer(), Augmenter(), Resizer()]))
 
     train_loader = DataLoader(train_dataset,
                               batch_size=args.batch_size,
